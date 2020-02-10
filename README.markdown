@@ -1,7 +1,6 @@
 # Generic Colouriser
 
-Radovan Garabík  http://kassiopeia.juls.savba.sk/~garabik/software/grc.html
-garabik @ kassiopeia.juls.savba.sk
+Radovan Garabík  <http://kassiopeia.juls.savba.sk/~garabik/software/grc.html> (garabik @ kassiopeia.juls.savba.sk)
 
 For the impatient - try following commands:
 
@@ -26,7 +25,7 @@ Each entry consists of several lines.
 
 Each line has form: `keyword=value`
 
-where keyword is one of: regexp, colours, command, skip, replace, count
+where keyword is one of: regexp, colours, command, concat, skip, replace, count
 
 Only regexp is mandatory, but it does not have much sense by itself unless you specify at least a colour, skip, replace or command keyword as well.
 
@@ -43,6 +42,8 @@ Yet another special name is an arbitrary string enclosed in straight quotes. Thi
 This is useful on a 256-colour enabled xterm, where e.g.  `colours="\033[38;5;22m"` will give you a dark green (inspired by Rutger Ovidius). Caveat: the string cannot contain a comma. This is due to my laziness :-)
 
 **command** is command to be executed when regexp matches. Its output will be mixed with normal stdout, use redirectors (`>/dev/null`) if you want to suppress it.
+
+**concat** is the name of a file which the current line will be appended to when the regexp matches.
 
 **skip** can be `skip=yes`, if that case the matched line is skipped (discarded from the output), or `skip=no`, when it is not skipped. Default (if you do not have skip keyword) is of course not skipped.
 
@@ -128,7 +129,7 @@ in your `/etc/grc.conf`, then typing `grc cat /var/log/syslog` will use `conf.lo
 ## Miscellaneous remarks:
 
 You should get yourself familiar with regular expressions. Good reading is
-at http://docs.python.org/dev/howto/regex.html
+at <http://docs.python.org/dev/howto/regex.html>
 
 The program is not yet optimized for speed. There are places that can
 give a big boost if optimized.
@@ -176,16 +177,25 @@ or, if you have recent BSD tail:
 
     tail -F /var/log/syslog | grcat conf.log >/dev/tty12
 
-If you want to start using grc automatically with supported commands, add
+## Automatic aliases
 
-    source /etc/grc.bashrc
+You can start using grc automatically with supported commands. The following assumes that `grc.<bashrc|zsh|fish>` is in `/etc`. The location may differ (i. e. `/usr/local/etc` when installed with homebrew).
+
+### Bash
 
 To set aliases for supported commands, append to your `~/.bashrc`:
+
     [[ -s "/etc/grc.bashrc" ]] && source /etc/grc.bashrc
 
+### ZSH
+
 Or for zsh users, append to `~/.zshrc`:
+
     [[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh
 
-(assuming you copied `grc.bashrc` and `grc.zsh` to `/etc`)
+### Fish
 
+Add to `~/.config/fish/config.fish` or in a new file in `~/.config/fish/conf.d/`:
+
+    source /usr/local/etc/grc.fish
 
